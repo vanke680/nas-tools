@@ -3,7 +3,7 @@ COPY --from=shinsenter/s6-overlay / /
 RUN set -xe && \
     export DEBIAN_FRONTEND="noninteractive" && \
     apt-get update -y && \
-    apt-get install -y wget bash && \
+    apt-get install -y wget curl bash && \
     apt-get install -y $(echo $(wget --no-check-certificate -qO- https://raw.githubusercontent.com/vanke680/nas-tools/master/package_list_debian.txt)) && \
     ln -sf /command/with-contenv /usr/bin/with-contenv && \
     # zone time
