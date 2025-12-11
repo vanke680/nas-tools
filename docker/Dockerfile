@@ -1,18 +1,15 @@
 FROM python:3.10.11-alpine
-RUN apk add --no-cache --virtual .build-deps \
-        libffi-dev \
-        gcc \
-        musl-dev \
-        libxml2-dev \
-        libxslt-dev \
-    && apk add --no-cache $(echo $(wget --no-check-certificate -qO- https://raw.githubusercontent.com/vanke680/nas-tools/master/package_list.txt)) \
+RUN set -ex \
+    && apk add --no-cache --virtual .build-deps \
+        libffi-dev gcc musl-dev libxml2-dev libxslt-dev \
+    && apk add --no-cache $(wget --no-check-certificate -qO- https://raw.githubusercontent.com/vanke3/nas-tools/master/package_list.txt) \
     && curl https://rclone.org/install.sh | bash \
     && if [ "$(uname -m)" = "x86_64" ]; then ARCH=amd64; elif [ "$(uname -m)" = "aarch64" ]; then ARCH=arm64; fi \
     && curl https://dl.min.io/client/mc/release/linux-${ARCH}/mc --create-dirs -o /usr/bin/mc \
     && chmod +x /usr/bin/mc \
     && pip install --upgrade pip setuptools wheel \
     && pip install cython \
-    && pip install -r https://raw.githubusercontent.com/vanke680/nas-tools/master/requirements.txt \
+    && pip install -r https://raw.githubusercontent.com/vanke3/nas-tools/master/requirements.txt \
     && apk del --purge .build-deps \
     && rm -rf /tmp/* /root/.cache /var/cache/apk/*
 ENV S6_SERVICES_GRACETIME=30000 \
